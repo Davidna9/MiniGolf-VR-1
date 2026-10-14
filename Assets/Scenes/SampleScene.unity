@@ -420,6 +420,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 583340563854170035, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_DelayTime
+      value: -0.38
+      objectReference: {fileID: 0}
     - target: {fileID: 2243020122175513880, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1178,7 +1182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9e113b58f8fb5459da3eeffc4c9831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaloMiniGolf
-  fuerza: 1.6
+  multiplicadorFuerza: 1.5
+  fuerzaMinimaParaGolpe: 0.2
+  radioDeteccionPalo: 0.15
+  audioSource: {fileID: 0}
+  efectoParticulasPrefab: {fileID: 0}
 --- !u!65 &1871353332
 BoxCollider:
   m_ObjectHideFlags: 0
