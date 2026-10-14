@@ -2,10 +2,17 @@ using UnityEngine;
 
 public class PaloMiniGolf : MonoBehaviour
 {
-    public float fuerza = 10f;
-    
+    [Header("Configuracion Fisica")]
+    public float multiplicadorFuerza = 1.5f;
+    public float fuerzaMinimaParaGolpe = 0.2f;
+    public float radioDeteccionPalo = 0.15f;
+
+    [Header("Efectos de Satisfaccion")]
+    public AudioSource audioSource;
+    public GameObject efectoParticulasPrefab;
+
     private Vector3 posicionAnterior;
-    private float velocidadActualPalo;
+    private Vector3 vectorVelocidadPalo;
 
     void Start()
     {
@@ -14,26 +21,56 @@ public class PaloMiniGolf : MonoBehaviour
 
     void Update()
     {
-        Vector3 desplazamiento = transform.position - posicionAnterior;
-        velocidadActualPalo = desplazamiento.magnitude / Time.deltaTime;
+        vectorVelocidadPalo = (transform.position - posicionAnterior) / Time.deltaTime;
+        
+        ProcesarImpactoRaycast();
+
         posicionAnterior = transform.position;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void ProcesarImpactoRaycast()
     {
-        if (other.CompareTag("Pelota"))
+        Vector3 direccionMovimiento = transform.position - posicionAnterior;
+        float distanciaMovimiento = direccionMovimiento.magnitude;
+
+        if (distanciaMovimiento > 0.001f)
         {
-            Rigidbody rbPelota = other.GetComponent<Rigidbody>();
-            
-            if (rbPelota != null)
+            RaycastHit hit;
+            if (Physics.SphereCast(posicionAnterior, radioDeteccionPalo, direccionMovimiento.normalized, out hit, distanciaMovimiento))
             {
-                Vector3 direccionImpacto = other.transform.position - transform.position;
-                Vector3 direccionFisica = new Vector3(direccionImpacto.x, 0f, direccionImpacto.z).normalized;
+                if (hit.collider.CompareTag("Pelota"))
+                {
+                    Rigidbody rbPelota = hit.collider.GetComponent<Rigidbody>();
+                    if (rbPelota != null)
+                    {
+                        float velocidadMando = vectorVelocidadPalo.magnitude;
 
-                float fuerzaFinal = velocidadActualPalo * fuerza;
+                        if (velocidadMando < fuerzaMinimaParaGolpe) return;
 
-                rbPelota.linearVelocity = direccionFisica * fuerzaFinal;
+                        Vector3 direccionFisica = new Vector3(vectorVelocidadPalo.x, 0f, vectorVelocidadPalo.z).normalized;
+                        float fuerzaFinal = velocidadMando * multiplicadorFuerza;
+
+                        rbPelota.AddForce(direccionFisica * fuerzaFinal, ForceMode.VelocityChange);
+
+                        DispararFeedbackSensorial(velocidadMando, hit.point);
+                    }
+                }
             }
+        }
+    }
+
+    private void DispararFeedbackSensorial(float intensidadGolpe, Vector3 puntoImpacto)
+    {
+        if (audioSource != null)
+        {
+            audioSource.volume = Mathf.Clamp(intensidadGolpe / 5f, 0.2f, 1.0f);
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
+            audioSource.Play();
+        }
+
+        if (efectoParticulasPrefab != null)
+        {
+            Destroy(Instantiate(efectoParticulasPrefab, puntoImpacto, Quaternion.identity), 1f);
         }
     }
 }

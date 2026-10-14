@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9e113b58f8fb5459da3eeffc4c9831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaloMiniGolf
-  fuerza: 1.5
+  fuerza: 1.6
 --- !u!65 &6335418844600897071
 BoxCollider:
   m_ObjectHideFlags: 0
