@@ -1182,9 +1182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9e113b58f8fb5459da3eeffc4c9831, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaloMiniGolf
-  multiplicadorFuerza: 1.5
+  multiplicadorFuerza: 1.35
   fuerzaMinimaParaGolpe: 0.2
-  radioDeteccionPalo: 0.15
+  radioDeteccionPalo: 0.1
   cooldownGolpe: 0.2
   audioSource: {fileID: 0}
   efectoParticulasPrefab: {fileID: 0}
